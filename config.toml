@@ -1,4 +1,15 @@
-baseURL = "http://example.org/"
+baseURL = "https://blog.docker.localhost/"
 languageCode = "en-us"
 title = "My New Hugo Site"
 theme = "dimension"
+
+[server]
+
+  [[server.headers]]
+    for = "/**.html"
+    [server.headers.values]
+      Content-Security-Policy = "script-src blog.docker.localhost"
+      Referrer-Policy = "strict-origin-when-cross-origin"
+      X-Content-Type-Options = "nosniff"
+      X-Frame-Options = "DENY"
+      X-XSS-Protection = "1; mode=block"

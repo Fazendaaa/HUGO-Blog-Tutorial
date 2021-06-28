@@ -3,6 +3,33 @@ version: '3'
 services:
   website:
     build: .
-    command: server --bind 0.0.0.0 --port 80 -D
+    command: server --baseUrl=blog.docker.localhost --bind 0.0.0.0 --port 80 -D
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.shiny.tls=true"
+      - "traefik.http.routers.shiny.rule=Host(`blog.docker.localhost`)"
+    networks:
+      - proxy
+
+  reverse-proxy:
+    image: traefik:v2.3
+    security_opt:
+      - no-new-privileges:true
     ports:
-      - 80:80
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${HOME}/.certs:/etc/certs:ro
+      - ${HOME}/.traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ${HOME}/.traefik/config.yml:/etc/traefik/config.yml:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik=true"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
