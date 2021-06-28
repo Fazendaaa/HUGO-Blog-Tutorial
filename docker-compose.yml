@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  website:
+  blog:
     build: .
     command: server --baseUrl=blog.docker.localhost --bind 0.0.0.0 --port 80 -D
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.shiny.tls=true"
-      - "traefik.http.routers.shiny.rule=Host(`blog.docker.localhost`)"
+      - "traefik.http.routers.blog.tls=true"
+      - "traefik.http.routers.blog.rule=Host(`blog.docker.localhost`)"
     networks:
       - proxy
 
